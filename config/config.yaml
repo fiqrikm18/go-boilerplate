@@ -1,0 +1,27 @@
+http_port: 8080
+grpc_port: 8081
+env: development
+
+# driver can be psql for postgressql, mysql for mysql, and sqlserver for sql server
+db_conf:
+  driver: psql
+  username: postgres
+  passowrd: postgres
+  host: 127.0.0.1
+  port: 5432
+  name: db_boilerplate
+  ssl_mode: prefer
+
+db_test:
+  driver: psql
+  username: postgres
+  passowrd: postgres
+  host: 127.0.0.1
+  port: 5432
+  name: db_test
+  ssl_mode: prefer
+
+security_conf:
+  access_token_exp_days: 10
+  refresh_token_exp_days: 15
+  password_salt: AALT2z+2dD/y3(u8_VRpw?ZF26+ntt.jM9tY4n_OqWAh6TZ/eAS?QL=RZsn-ePb(Hj.i_bue=!f/veF+I_jL(NQ6(EOUd)@?evQd
