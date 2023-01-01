@@ -1,12 +1,9 @@
 package main
 
 import (
-	"github.com/fiqrikm18/go-boilerplate/internal/config"
+	"github.com/fiqrikm18/go-boilerplate/cmd"
 )
 
 func main() {
-	_, err := config.NewDbConnection()
-	if err != nil {
-		panic(err)
-	}
+	cmd.Execute()
 }

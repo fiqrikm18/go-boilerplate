@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/fiqrikm18/go-boilerplate/internal/model/dao"
 	"github.com/fiqrikm18/go-boilerplate/pkg/lib"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -18,12 +19,12 @@ type DbConnection struct {
 	DB *gorm.DB
 }
 
-func NewDbConnection() (dbConn *DbConnection, err error) {
+func NewDbConnection() (*DbConnection, error) {
 	var dialector gorm.Dialector
 	appMode := os.Getenv("APP_MODE")
 	appConf, err := lib.LoadConfigFile()
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	dbDriver := appConf.DBConf.Driver
@@ -55,15 +56,25 @@ func NewDbConnection() (dbConn *DbConnection, err error) {
 	}
 
 	conn, err := gorm.Open(dialector, &gorm.Config{
-		Logger: dbLogger(),
+		Logger:                                   dbLogger(),
+		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	dbConn.DB = conn
-	return
+	runAutoMigrate(conn)
+
+	return &DbConnection{
+		DB: conn,
+	}, nil
+}
+
+func runAutoMigrate(conn *gorm.DB) {
+	conn.AutoMigrate(
+		dao.User{},
+	)
 }
 
 func dbLogger() logger.Interface {
