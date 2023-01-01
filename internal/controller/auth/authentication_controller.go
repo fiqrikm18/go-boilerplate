@@ -27,12 +27,37 @@ func (controller *AuthenticationController) RegisterController(c *gin.Context) {
 	var request dto.UserRequest
 	if err := c.ShouldBind(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"messagee": err.Error(),
+			"message": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"asd": request,
+	userCheck, err := controller.userRepository.FindByUsernameOrEmail(request.Username, request.Email)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	if userCheck.Email != "" || userCheck.Username != "" {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"message": "username or email already registered",
+		})
+		return
+	}
+
+	err = controller.userRepository.Create(request)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusCreated, dto.UserResponse{
+		Name:     request.Name,
+		Username: request.Username,
+		Email:    request.Email,
 	})
 }
