@@ -27,7 +27,7 @@ func NewUserRepository() (*UserRepository, error) {
 	return &UserRepository{DbConn: conn}, nil
 }
 
-func (repo *UserRepository) Create(userData dto.UserRequest) error {
+func (repo *UserRepository) Create(userData dto.RegisterRequest) error {
 	appConf, err := lib.LoadConfigFile()
 	if err != nil {
 		return err
