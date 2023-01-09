@@ -6,19 +6,10 @@ env: development
 db_conf:
   driver: psql
   username: postgres
-  passowrd: postgres
+  password: postgres
   host: 127.0.0.1
   port: 5432
   name: db_boilerplate
-  ssl_mode: prefer
-
-db_test:
-  driver: psql
-  username: postgres
-  passowrd: postgres
-  host: 127.0.0.1
-  port: 5432
-  name: db_test
   ssl_mode: prefer
 
 security_conf:
