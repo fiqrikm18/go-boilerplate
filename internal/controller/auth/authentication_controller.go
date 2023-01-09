@@ -200,4 +200,82 @@ func (controller *AuthenticationController) Logout(c *gin.Context) {
 }
 
 func (controller *AuthenticationController) RefreshToken(c *gin.Context) {
+	authToken := strings.Split(c.Request.Header["Authorization"][0], " ")
+	if len(authToken) > 1 {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "invalid authentication token",
+		})
+		return
+	}
+
+	tokenUtils, err := lib.NewJWTToken()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	token, err := tokenUtils.ExtractToken(authToken[1])
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	user, err := controller.userRepository.FindByUsernameOrEmail(token.Username, token.Username)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	if user.Email == "" || user.Username == "" {
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"message": "invalid username or password",
+		})
+		return
+	}
+
+	tokenPayload := lib.TokenPayload{Username: user.Username}
+	tokenData, err := tokenUtils.GenerateToken(tokenPayload)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	if err := controller.tokenRepository.RevokeByUserID(user.Id); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	tokenDAO := dao.OauthAccessToken{
+		AccessTokenUUID:     tokenData.AccessTokenUUID,
+		RefreshTokenUUID:    tokenData.RefreshTokenUUID,
+		AccessTokenExpDate:  time.Unix(tokenData.AccessTokenExpire, 0),
+		RefreshTokenExpData: time.Unix(tokenData.RefreshTokenExpire, 0),
+		Revoked:             false,
+		UserId:              user.Id,
+	}
+
+	if err := controller.tokenRepository.Create(tokenDAO); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	response := dto.LoginResponse{
+		ExpiredIn:    tokenData.AccessTokenExpire,
+		AccessToken:  tokenData.AccessToken,
+		RefreshToken: tokenData.RefreshToken,
+	}
+
+	c.JSON(http.StatusOK, response)
 }
