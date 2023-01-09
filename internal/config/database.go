@@ -74,6 +74,7 @@ func NewDbConnection() (*DbConnection, error) {
 func runAutoMigrate(conn *gorm.DB) {
 	conn.AutoMigrate(
 		dao.User{},
+		dao.OauthAccessToken{},
 	)
 }
 

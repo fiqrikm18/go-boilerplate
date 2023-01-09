@@ -38,7 +38,7 @@ type (
 	}
 )
 
-func NewToken() (JwtToken, error) {
+func NewJWTToken() (JwtToken, error) {
 	currentDir, _ := os.Getwd()
 
 	signBytes, err := os.ReadFile(fmt.Sprintf("%s/certs/app.rsa", currentDir))
