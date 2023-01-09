@@ -149,7 +149,7 @@ func (controller *AuthenticationController) LoginController(c *gin.Context) {
 
 func (controller *AuthenticationController) Logout(c *gin.Context) {
 	authToken := strings.Split(c.Request.Header["Authorization"][0], " ")
-	if len(authToken) > 1 {
+	if len(authToken) < 2 {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"message": "invalid authentication token",
 		})
