@@ -12,3 +12,6 @@ test:
 dev:
 	export APP_CONFIG_PATH=$(CWD)/config && \
 	go run main.go
+
+pb-gen:
+	protoc --go_out=. --go-grpc_out=. ./proto/*.proto
