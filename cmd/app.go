@@ -30,5 +30,16 @@ func runRootCommand(cmd *cobra.Command, args []string) {
 		httpServer.Run()
 	}()
 
+	go func() {
+		grpcServer, err := config.NewGrpcServer()
+		if err != nil {
+			panic(err)
+		}
+
+		if err := grpcServer.Run(); err != nil {
+			panic(err)
+		}
+	}()
+
 	select {}
 }
