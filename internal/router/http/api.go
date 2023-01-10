@@ -11,4 +11,7 @@ func RegisterRouter(srv *gin.Engine) {
 
 	authController := AuthenticationController.NewAuthenticationController()
 	srv.POST("/register", authController.RegisterController)
+	srv.POST("/login", authController.LoginController)
+	srv.GET("/logout", authController.Logout)
+	srv.GET("/refresh-token", authController.RefreshToken)
 }

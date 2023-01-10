@@ -21,7 +21,7 @@ type (
 	DbConfig struct {
 		Driver   string `mapstructure:"driver"`
 		Username string `mapstructure:"username"`
-		Password string `mapstructure:"passowrd"`
+		Password string `mapstructure:"password"`
 		Host     string `mapstructure:"host"`
 		Port     int    `mapstructure:"port"`
 		Name     string `mapstructure:"name"`
