@@ -149,7 +149,6 @@ func (controller *AuthenticationController) LoginController(c *gin.Context) {
 
 func (controller *AuthenticationController) Logout(c *gin.Context) {
 	authToken := strings.Split(c.Request.Header["Authorization"][0], " ")
-
 	tokenUtils, err := lib.NewJWTToken()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
