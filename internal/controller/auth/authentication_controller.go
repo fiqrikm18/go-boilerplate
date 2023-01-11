@@ -149,12 +149,6 @@ func (controller *AuthenticationController) LoginController(c *gin.Context) {
 
 func (controller *AuthenticationController) Logout(c *gin.Context) {
 	authToken := strings.Split(c.Request.Header["Authorization"][0], " ")
-	if len(authToken) < 2 {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"message": "invalid authentication token",
-		})
-		return
-	}
 
 	tokenUtils, err := lib.NewJWTToken()
 	if err != nil {
@@ -176,13 +170,6 @@ func (controller *AuthenticationController) Logout(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
-		})
-		return
-	}
-
-	if user.Email == "" || user.Username == "" {
-		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"message": "invalid username or password",
 		})
 		return
 	}
