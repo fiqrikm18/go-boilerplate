@@ -149,7 +149,6 @@ func (controller *AuthenticationController) LoginController(c *gin.Context) {
 
 func (controller *AuthenticationController) Logout(c *gin.Context) {
 	authToken := strings.Split(c.Request.Header["Authorization"][0], " ")
-
 	tokenUtils, err := lib.NewJWTToken()
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -173,7 +172,7 @@ func (controller *AuthenticationController) Logout(c *gin.Context) {
 		})
 		return
 	}
-
+  
 	if err := controller.tokenRepository.RevokeByUserID(user.Id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
