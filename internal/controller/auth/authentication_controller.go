@@ -172,7 +172,7 @@ func (controller *AuthenticationController) Logout(c *gin.Context) {
 		})
 		return
 	}
-  
+
 	if err := controller.tokenRepository.RevokeByUserID(user.Id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
