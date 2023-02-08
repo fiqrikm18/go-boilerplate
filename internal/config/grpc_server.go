@@ -2,12 +2,11 @@ package config
 
 import (
 	"fmt"
-	"github.com/fiqrikm18/go-boilerplate/internal/model/protobuf"
-	grpc2 "github.com/fiqrikm18/go-boilerplate/internal/router/grpc"
-	"github.com/fiqrikm18/go-boilerplate/pkg/lib"
-	"google.golang.org/grpc"
 	"net"
 	"strconv"
+
+	"github.com/fiqrikm18/go-boilerplate/pkg/lib"
+	"google.golang.org/grpc"
 )
 
 type GRPCServer struct {
@@ -38,6 +37,5 @@ func (srv *GRPCServer) Run() error {
 		return err
 	}
 
-	protobuf.RegisterGreeterServer(srv.Srv, &grpc2.RpcGreetingServer{})
 	return srv.Srv.Serve(listener)
 }
