@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/fiqrikm18/go-boilerplate/internal/config"
+	grpcRouter "github.com/fiqrikm18/go-boilerplate/internal/router/grpc"
 	httpRouter "github.com/fiqrikm18/go-boilerplate/internal/router/http"
 	"github.com/spf13/cobra"
 )
@@ -36,6 +37,7 @@ func runRootCommand(cmd *cobra.Command, args []string) {
 			panic(err)
 		}
 
+		grpcRouter.RegisterGRPCService(grpcServer.Srv)
 		if err := grpcServer.Run(); err != nil {
 			panic(err)
 		}

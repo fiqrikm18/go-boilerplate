@@ -1,4 +1,4 @@
-## Authentication
+## Go Boilerplate
 This is a simple golang boilerplate using GRPC and REST API. 
 
 ### Tech Used
